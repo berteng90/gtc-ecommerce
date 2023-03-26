@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Banner from "../components/UI/Banner";
-
 const products = [
   {
     id: 1,
@@ -62,21 +61,30 @@ const products = [
   },
 ];
 
-const Product = ({ name, price, image, description }) => (
-  <TouchableOpacity style={styles.product} activeOpacity={0.7}>
-    <Image style={styles.image} source={image} />
-    <View style={styles.detailsContainer}>
-      <Text style={styles.name}>{name}</Text>
-      <Text style={styles.price}>{price}</Text>
-      <Text style={styles.description}>{description}</Text>
-    </View>
-    <View style={styles.button}>
-      <Text style={styles.buttonText}>Add to cart</Text>
-    </View>
-  </TouchableOpacity>
-);
+const Product = ({ product, handleProductPress }) => {
+  return (
+    <TouchableOpacity
+      onPress={() => handleProductPress(product)}
+      style={styles.product}
+      activeOpacity={0.7}
+    >
+      <Image style={styles.image} source={product.image} />
+      <View style={styles.detailsContainer}>
+        <Text style={styles.name}>{product.name}</Text>
+        <Text style={styles.price}>{product.price}</Text>
+      </View>
+      <View style={styles.button}>
+        <Text style={styles.buttonText}>Add to cart</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
-export default function MainScreen() {
+export default function MainScreen({ navigation }) {
+  const handleProductPress = (currProduct) => {
+    navigation.navigate("Product Screen", { product: currProduct });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -98,9 +106,8 @@ export default function MainScreen() {
           {products.map((product) => (
             <Product
               key={product.id}
-              name={product.name}
-              price={product.price}
-              image={product.image}
+              product={product}
+              handleProductPress={handleProductPress}
             />
           ))}
         </View>
